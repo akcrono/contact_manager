@@ -1,4 +1,5 @@
-class Contact
+class Contact < ActiveRecord::Base
+
   attr_reader :first_name, :last_name, :phone_number
 
   def initialize(attributes)
