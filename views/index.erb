@@ -2,6 +2,15 @@
 
 <ul>
   <% @contacts.each do |contact| %>
-    <li><%= contact.name %> - <%= contact.phone_number %></li>
+    <li><a href="/contacts/<%= contact.id %>"><%= contact.name %></a> - <%= contact.phone_number %></li>
   <% end %>
 </ul>
+
+<div style="width:25%">
+<% if @page_number != 1 %>
+  <a href="/?page=<%= @page_number.to_i - 1%>"> Previous </a>
+  <% end %>
+  <% if Contact.all.limit(5).offset((@page_number)*5) != []%>
+  <a style="float:right" href="/?page=<%= @page_number.to_i + 1%>"> Next </a>
+  <% end %>
+</div>
