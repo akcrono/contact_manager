@@ -7,6 +7,12 @@
     <link rel="stylesheet" href="css/app.css" />
   </head>
   <body>
+      <form action="/search" method="get">
+    <label for="Search">Search:</label>
+    <input type="text" id="search" name="search_results" />
+    <input type="submit" />
+    </form>
     <%= yield %>
+    <div><a href="/add">Add a contact</a></div>
   </body>
 </html>

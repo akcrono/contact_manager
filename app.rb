@@ -21,3 +21,24 @@ get '/contacts/:id' do
   @contact = Contact.find(params[:id])
   erb :show
 end
+
+get '/search' do
+  @search = params[:search_results]
+  @contacts = Contact.where("first_name ILIKE ? or last_name ILIKE ?", @search, @search)
+  # whoudl be a way to search for full name.  Also, @search is redundant
+  erb :search
+end
+
+get '/add' do
+
+erb :add
+end
+
+post '/add' do
+  @first_name = params[:first_name]
+  @last_name = params[:last_name]
+  @phone_number = params[:phone_number]
+  Contact.create(first_name: @first_name, last_name: @last_name, phone_number: @phone_number)
+
+  redirect '/'
+end
