@@ -6,14 +6,17 @@ require 'pry'
 require_relative 'models/contact'
 
 get '/' do
-  if params[:page] != nil
+  if params[:page]
     @page_number = params[:page].to_i
   else
-      @page_number = 1
+    @page_number = 1
   end
-  @contacts = Contact.all.limit(5).offset((@page_number-1)*5)
-  # binding.pry
+  @contacts = Contact.limit(5).offset((@page_number - 1) * 5)
   erb :index
+end
+
+get '/contacts/new' do
+  erb :'contacts/new'
 end
 
 get '/contacts/:id' do
@@ -23,22 +26,19 @@ get '/contacts/:id' do
 end
 
 get '/search' do
-  @search = params[:search_results]
-  @contacts = Contact.where("first_name ILIKE ? or last_name ILIKE ?", @search, @search)
-  # whoudl be a way to search for full name.  Also, @search is redundant
+  @search = "%" + params[:search_results] + "%"
+  @contacts = Contact.where("first_name ILIKE ?
+                            or last_name ILIKE ?
+                            or CONCAT(first_name, ' ', last_name) ILIKE ?", @search, @search, @search)
   erb :search
 end
 
-get '/add' do
+post '/contacts' do
+  @contact = Contact.new(params[:contact])
+  if @contact.save
+    redirect '/'
+  else
+    render :'contacts/new'
+  end
 
-erb :add
-end
-
-post '/add' do
-  @first_name = params[:first_name]
-  @last_name = params[:last_name]
-  @phone_number = params[:phone_number]
-  Contact.create(first_name: @first_name, last_name: @last_name, phone_number: @phone_number)
-
-  redirect '/'
 end
